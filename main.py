@@ -1,6 +1,8 @@
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
+from routers.auth_router import get_identity
 from routers.roll_router import router
-from fastapi import FastAPI
+from fastapi import FastAPI, Depends
 from passlib.context import CryptContext
 
 from sqlalchemy.orm import sessionmaker
@@ -14,9 +16,8 @@ Base.metadata.create_all(bind=engine)
 from models.user_model import *
 
 app = FastAPI(
-    title="Implementing Security",
-    description="Project to implement security in FastAPI",
-    version="1.0.0"
+    title="Eko zamin",
+
 )
 Session = sessionmaker(bind=engine)
 session = Session()
@@ -61,6 +62,7 @@ app.include_router(
     savdo_router.router_savdo,
     prefix='/savdo',
     tags=['Tugatilgan savdolar  '],
+    dependencies=[Depends(get_identity)],
     responses={200:{'description':'Ok'},201:{'description':'Created'},400:{'description':'Bad Request'},401:{'desription':'Unauthorized'}}
 )
 
